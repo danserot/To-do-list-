@@ -107,7 +107,6 @@ function App() {
 
   function addTodo() {
     if (!task.trim()) return;
-
     addTodoMutation.mutate(task);
     setTask("");
   }
@@ -137,6 +136,7 @@ function App() {
   if (isError) {
     return <Text p="10">Something went wrong</Text>;
   }
+ 
 
   return (
     <Box minH="100vh" bg="#f1f1f1" py="10" fontFamily="mono">
@@ -169,6 +169,11 @@ function App() {
           <Button
             type="submit"
             onClick={addTodo}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                addTodo();
+              }
+            }}
             loading={addTodoMutation.isPending}
             rounded="none"
             border="2px solid"
@@ -179,6 +184,7 @@ function App() {
             _hover={{
               bg: "gray.200",
             }}
+            
           >
             Create todo
           </Button>

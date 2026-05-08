@@ -1,38 +1,98 @@
 import { Link } from "@tanstack/react-router";
+
+import { Box, Container, Flex, HStack, Text, Button } from "@chakra-ui/react";
+
 import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[var(--header-bg)] px-4 backdrop-blur-lg">
-      <nav className="page-wrap flex flex-wrap items-center gap-x-3 gap-y-2 py-3 sm:py-4">
-        <h2 className="m-0 flex-shrink-0 text-base font-semibold tracking-tight">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-3 py-1.5 text-sm text-[var(--sea-ink)] no-underline shadow-[0_8px_24px_rgba(30,90,72,0.08)] sm:px-4 sm:py-2">
-            <span className="h-2 w-2 rounded-full bg-[linear-gradient(90deg,#56c6be,#7ed3bf)]" />
-            TanStack Start
-          </Link>
-        </h2>
+    <Box
+      position="sticky"
+      top="4"
+      zIndex="1000"
+      display="flex"
+      justifyContent="center"
+      px="4">
+      <Container maxW="80%">
+        <Flex
+          align="center"
+          justify="space-between"
+          px="6"
+          py="4"
+          borderRadius="24px"
+          bg="rgba(255,255,255,0.08)"
+          backdropFilter="blur(18px)"
+          border="1px solid"
+          borderColor="whiteAlpha.200"
+          boxShadow="0 10px 40px rgba(0,0,0,0.15)">
+          <Link to="/">
+            <HStack cursor="pointer" gap="3">
+              <Flex
+                w="42px"
+                h="42px"
+                borderRadius="14px"
+                align="center"
+                justify="center"
+                bg="black"
+                color="white"
+                fontWeight="bold"
+                fontSize="sm">
+                TS
+              </Flex>
 
-        <div className="ml-auto flex items-center gap-1.5 sm:ml-0 sm:gap-2">
-          <ThemeToggle />
-        </div>
+              <Box>
+                <Text
+                  color="black"
+                  fontWeight="700"
+                  fontSize="md"
+                  lineHeight="1">
+                  TanStack App
+                </Text>
 
-        <div className="order-3 flex w-full flex-wrap items-center gap-x-4 gap-y-1 pb-1 text-sm font-semibold sm:order-2 sm:w-auto sm:flex-nowrap sm:pb-0">
-          <Link
-            to="/"
-            className="nav-link"
-            activeProps={{ className: "nav-link is-active" }}>
-            Home
+                <Text color="black" fontSize="xs" mt="1">
+                  Router + Query
+                </Text>
+              </Box>
+            </HStack>
           </Link>
-          <Link
-            to="/about"
-            className="nav-link"
-            activeProps={{ className: "nav-link is-active" }}>
-            About
-          </Link>
-        </div>
-      </nav>
-    </header>
+
+          <HStack gap="3">
+            <Link to="/">
+              {({ isActive }) => (
+                <Button
+                  size="sm"
+                  borderRadius="full"
+                  bg={isActive ? "white" : "whiteAlpha.100"}
+                  color={isActive ? "black" : "gray.800"}
+                  _hover={{
+                    bg: isActive ? "white" : "whiteAlpha.200",
+                  }}
+                  transition="0.2s">
+                  Main
+                </Button>
+              )}
+            </Link>
+
+            <Link to="/about">
+              {({ isActive }) => (
+                <Button
+                  size="sm"
+                  borderRadius="full"
+                  bg={isActive ? "white" : "whiteAlpha.100"}
+                  color={isActive ? "black" : "gray.800"}
+                  _hover={{
+                    bg: isActive ? "white" : "whiteAlpha.200",
+                  }}
+                  transition="0.2s">
+                  About
+                </Button>
+              )}
+            </Link>
+
+            <ThemeToggle />
+          </HStack>
+        </Flex>
+      </Container>
+    </Box>
   );
 }

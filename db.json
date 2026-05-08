@@ -15,46 +15,9 @@
   ],
   "todos": [
     {
-      "id": "3",
-      "title": "Practice API requests",
+      "text": "hmmm",
       "completed": false,
-      "userId": 2,
-      "priority": "low"
-    },
-    {
-      "text": "heello",
-      "completed": false,
-      "id": "SuF78jsg9mg"
-    },
-    {
-      "text": "gdgfgd",
-      "completed": false,
-      "id": "_ML1XYqS59k"
-    },
-    {
-      "text": "gdfgfdg",
-      "completed": false,
-      "id": "sFqxN0mZSmk"
-    },
-    {
-      "text": "dfgdfg",
-      "completed": false,
-      "id": "TkyFRs7DSlE"
-    },
-    {
-      "text": "dfgdfgdfg",
-      "completed": false,
-      "id": "-RjikFDlp58"
-    },
-    {
-      "text": "dfgdfgdfgdfgfdgdfg",
-      "completed": false,
-      "id": "WAYs2_x-xjc"
-    },
-    {
-      "text": "dfgdfg",
-      "completed": false,
-      "id": "1Ba9tEpKI3I"
+      "id": "eyphghDrQOw"
     }
   ],
   "posts": [
