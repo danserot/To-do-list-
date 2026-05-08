@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
   Box,
@@ -23,54 +24,118 @@ type Todo = {
   completed: boolean;
 };
 
+const API_URL = "http://localhost:3000/todos";
+
+async function getTodos(): Promise<Todo[]> {
+  const res = await fetch(API_URL);
+  if (!res.ok) throw new Error("Failed to fetch todos");
+  return res.json();
+}
+
+async function createTodo(text: string): Promise<Todo> {
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      text,
+      completed: false,
+    }),
+  });
+
+  if (!res.ok) throw new Error("Failed to create todo");
+  return res.json();
+}
+
+async function updateTodo(todo: Todo): Promise<Todo> {
+  const res = await fetch(`${API_URL}/${todo.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      completed: !todo.completed,
+    }),
+  });
+
+  if (!res.ok) throw new Error("Failed to update todo");
+  return res.json();
+}
+
+async function deleteTodo(id: number): Promise<void> {
+  const res = await fetch(`${API_URL}/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!res.ok) throw new Error("Failed to delete todo");
+}
+
 function App() {
   const [task, setTask] = useState("");
+  const queryClient = useQueryClient();
 
-  const [todos, setTodos] = useState<Todo[]>([
-    { id: 1, text: "qwe", completed: false },
-    { id: 2, text: "hello", completed: true },
-    { id: 3, text: "delectus aut autem", completed: true },
-    {
-      id: 4,
-      text: "quis ut nam facilis et officia qui",
-      completed: true,
+  const {
+    data: todos = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["todos"],
+    queryFn: getTodos,
+  });
+
+  const addTodoMutation = useMutation({
+    mutationFn: createTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
     },
-    { id: 5, text: "fugiat veniam minus", completed: false },
-  ]);
+  });
+
+  const toggleTodoMutation = useMutation({
+    mutationFn: updateTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    },
+  });
+
+  const deleteTodoMutation = useMutation({
+    mutationFn: deleteTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    },
+  });
 
   function addTodo() {
     if (!task.trim()) return;
 
-    setTodos([
-      ...todos,
-      {
-        id: Date.now(),
-        text: task,
-        completed: false,
-      },
-    ]);
-
+    addTodoMutation.mutate(task);
     setTask("");
   }
 
-  function toggleTodo(id: number) {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ?
-          {
-            ...todo,
-            completed: !todo.completed,
-          }
-        : todo,
-      ),
-    );
+  function toggleTodo(todo: Todo) {
+    toggleTodoMutation.mutate(todo);
   }
+
   function clearCompleted() {
-    setTodos(todos.filter((todo) => !todo.completed));
+    const completedTodos = todos.filter((todo) => todo.completed);
+
+    completedTodos.forEach((todo) => {
+      deleteTodoMutation.mutate(todo.id);
+    });
   }
 
   function clearAll() {
-    setTodos([]);
+    todos.forEach((todo) => {
+      deleteTodoMutation.mutate(todo.id);
+    });
+  }
+
+  if (isLoading) {
+    return <Text p="10">Loading...</Text>;
+  }
+
+  if (isError) {
+    return <Text p="10">Something went wrong</Text>;
   }
 
   return (
@@ -81,8 +146,9 @@ function App() {
           mb="10"
           size="lg"
           letterSpacing="widest"
-          color="black">
-          To do list example with TanStack Router
+          color="black"
+        >
+          To do list example with TanStack Router + Query
         </Heading>
 
         <HStack mb="3" align="stretch">
@@ -102,6 +168,7 @@ function App() {
 
           <Button
             onClick={addTodo}
+            loading={addTodoMutation.isPending}
             rounded="none"
             border="2px solid"
             borderColor="gray.600"
@@ -110,10 +177,12 @@ function App() {
             px="6"
             _hover={{
               bg: "gray.200",
-            }}>
+            }}
+          >
             Create todo
           </Button>
         </HStack>
+
         <HStack mb="4">
           <Button
             onClick={clearCompleted}
@@ -122,7 +191,8 @@ function App() {
             color="white"
             _hover={{
               bg: "red.600",
-            }}>
+            }}
+          >
             Clear Completed
           </Button>
 
@@ -133,7 +203,8 @@ function App() {
             color="white"
             _hover={{
               bg: "gray.800",
-            }}>
+            }}
+          >
             Clear All
           </Button>
         </HStack>
@@ -150,12 +221,14 @@ function App() {
               px="5"
               py="4"
               cursor="pointer"
-              onClick={() => toggleTodo(todo.id)}>
+              onClick={() => toggleTodo(todo)}
+            >
               <Text
                 fontSize="2xl"
                 color="#247886"
                 textDecoration={todo.completed ? "line-through" : "none"}
-                lineHeight="1.2">
+                lineHeight="1.2"
+              >
                 {todo.text}
               </Text>
 
