@@ -130,7 +130,7 @@ function App() {
     });
   }
 
-  if (isLoading) {
+  if (isLoading &&!todos) {
     return <Text p="10">Loading...</Text>;
   }
 
