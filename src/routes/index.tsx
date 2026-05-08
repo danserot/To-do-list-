@@ -167,6 +167,7 @@ function App() {
           />
 
           <Button
+            type="submit"
             onClick={addTodo}
             loading={addTodoMutation.isPending}
             rounded="none"
@@ -185,6 +186,7 @@ function App() {
 
         <HStack mb="4">
           <Button
+              type="button"
             onClick={clearCompleted}
             rounded="none"
             bg="red.500"
@@ -197,6 +199,7 @@ function App() {
           </Button>
 
           <Button
+            type="button"
             onClick={clearAll}
             rounded="none"
             bg="black"

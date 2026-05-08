@@ -1,55 +1,45 @@
 {
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Artem",
       "email": "artem@example.com",
       "role": "student"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Medina",
       "email": "medina@example.com",
       "role": "designer"
     }
   ],
-
   "todos": [
     {
-      "id": 1,
-      "title": "Learn TanStack Query",
-      "completed": false,
-      "userId": 1,
-      "priority": "high"
-    },
-    {
-      "id": 2,
-      "title": "Build Todo App",
-      "completed": true,
-      "userId": 1,
-      "priority": "medium"
-    },
-    {
-      "id": 3,
+      "id": "3",
       "title": "Practice API requests",
       "completed": false,
       "userId": 2,
       "priority": "low"
+    },
+    {
+      "text": "Hello",
+      "completed": true,
+      "id": "draOMyVdEbQ"
     }
   ],
-
   "posts": [
     {
-      "id": 1,
+      "id": "1",
       "title": "Getting started with TanStack",
       "content": "TanStack Query helps manage server state.",
       "authorId": 1
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "Why fake APIs are useful",
       "content": "json-server is great for frontend practice.",
       "authorId": 2
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
